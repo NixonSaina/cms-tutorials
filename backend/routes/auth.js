@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const router = express.Router();
 
-// Register
+// Register new user
 router.post('/register', async (req, res) => {
   const { username, password } = req.body;
   const existingUser = await User.findOne({ username });
@@ -16,7 +16,7 @@ router.post('/register', async (req, res) => {
   res.status(201).send('User registered.');
 });
 
-// Login
+// Login existing user
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
   const user = await User.findOne({ username });
@@ -29,7 +29,7 @@ router.post('/login', async (req, res) => {
   res.json({ token });
 });
 
-// Middleware to verify JWT
+// Middleware to protect routes
 function authMiddleware(req, res, next) {
   const token = req.header('Authorization').replace('Bearer ', '');
   if (!token) return res.status(401).send('No token provided.');
